@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './user/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ProductsModule } from './product/products.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -10,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
     MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/essaouira-live'),
     UsersModule,
     AuthModule,
+    ProductsModule,
   ],
 })
 export class AppModule {}

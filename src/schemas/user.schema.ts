@@ -14,6 +14,12 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
+  @Prop({ enum: ['user', 'seller', 'admin'], default: 'user' })
+  role: string;
+
+  @Prop({ enum: ['active', 'inactive', 'suspended'], default: 'active' })
+  status: string;
+
   @Prop({ required: true })
   password: string;
 }

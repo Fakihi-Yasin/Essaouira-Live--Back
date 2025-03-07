@@ -47,10 +47,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Generate JWT Token
     const payload = { userId: user._id, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
+      role: user.role,
+
     };
   }
   
