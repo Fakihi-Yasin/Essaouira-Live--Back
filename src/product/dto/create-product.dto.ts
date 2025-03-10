@@ -1,23 +1,28 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class CreateProductDto {
-  @IsNotEmpty({ message: 'Name is required' })
   @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty({ message: 'Description is required' })
   @IsString()
+  @IsNotEmpty()
   description: string;
 
-  @IsNotEmpty({ message: 'Price is required' })
-  @IsNumber({}, { message: 'Price must be a number' })
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number) // Transform string to number
+  @Transform(({ value }) => parseFloat(value))
   price: number;
 
-  @IsNotEmpty({ message: 'Quantity is required' })
-  @IsNumber({}, { message: 'Quantity must be a number' })
+  @IsNumber()
+  @IsNotEmpty()
+  @Type(() => Number) // Transform string to number
+  @Transform(({ value }) => parseInt(value))
   quantity: number;
-  @IsNotEmpty({ message: 'Image is required' })
+
   @IsString()
-  image: string;
-  
-} 
+  @IsOptional()
+  imageUrl?: string;
+}

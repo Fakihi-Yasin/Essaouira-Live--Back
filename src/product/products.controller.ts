@@ -1,28 +1,50 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, HttpCode, HttpStatus, Req, SetMetadata, UnauthorizedException } from '@nestjs/common';
+import { 
+  Controller, Get, Post, Put, Delete, Body, Param, 
+  UseGuards, HttpCode, HttpStatus, Req, 
+  UseInterceptors, UploadedFile, Res,
+  Logger
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { request } from 'http';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { multerConfig } from '../config/multer.config';
+import { join } from 'path';
+import { of } from 'rxjs';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  private readonly logger = new Logger(ProductsController.name);
 
-  // @Get('admin')
-  // @SetMetadata('roles', ['admin']) 
-  // async adminOnlyRoute() {
-  //   return { message: 'This route is only accessible by admin' };
-  // }
+  constructor(private readonly productsService: ProductsService) {}
 
   @Post()
   @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(HttpStatus.CREATED)
-  // @SetMetadata('roles', ['seller', 'admin'])
-
-    async create(@Body() createProductDto: CreateProductDto, @Req() request: any) {
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async create(
+    @Body() createProductDto: CreateProductDto, 
+    @Req() request: any,
+    @UploadedFile() file?: Express.Multer.File
+  ) {
     const userId = request.user.userId;
+    
+    // The DTO will now handle the type conversion
+    this.logger.log(`Creating product with data: ${JSON.stringify(createProductDto)}`);
+    this.logger.log(`File received: ${file ? 'Yes' : 'No'}`);
+    
+    if (file) {
+      this.logger.log(`File details: ${JSON.stringify({
+        filename: file.filename,
+        mimetype: file.mimetype,
+        size: file.size
+      })}`);
+      createProductDto.imageUrl = file.path.replace(/\\/g, '/');
+    }
+    
     return this.productsService.create(createProductDto, userId);
   }
 
@@ -38,10 +60,24 @@ export class ProductsController {
     return this.productsService.findAll(userId);
   }
 
-
+  // Serve product images
+  @Get('image/:imageName')
+  getProductImage(@Param('imageName') imageName: string, @Res() res) {
+    return of(res.sendFile(join(process.cwd(), 'uploads', imageName)));
+  }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async update(
+    @Param('id') id: string, 
+    @Body() updateProductDto: UpdateProductDto,
+    @UploadedFile() file?: Express.Multer.File
+  ) {
+    // If a file was uploaded, add the file path to the DTO
+    if (file) {
+      updateProductDto.imageUrl = file.path.replace(/\\/g, '/');
+    }
+    
     return this.productsService.update(id, updateProductDto);
   }
 
@@ -50,4 +86,4 @@ export class ProductsController {
   async delete(@Param('id') id: string) {
     return this.productsService.delete(id);
   }
-} 
+}

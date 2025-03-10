@@ -16,4 +16,10 @@ export class UpdateProductDto {
   @IsOptional()
   @IsNumber({}, { message: 'Quantity must be a number' })
   quantity?: number;
+
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
 } 

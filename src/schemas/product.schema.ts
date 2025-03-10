@@ -17,8 +17,9 @@ export class Product {
 
   @Prop({ required: true })
   quantity: number;
-  @Prop({required: true})
-  image: string
+  
+  @Prop()
+  imageUrl: string;
   
 
   @Prop({ type: String, ref: 'User', required: true }) 
