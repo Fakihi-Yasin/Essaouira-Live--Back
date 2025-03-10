@@ -20,7 +20,10 @@ export class Product {
   
   @Prop()
   imageUrl: string;
-  
+
+  @Prop({ enum: ['active', 'out of stock'], default: 'active' })
+  status: string;
+
 
   @Prop({ type: String, ref: 'User', required: true }) 
   userId: string;
