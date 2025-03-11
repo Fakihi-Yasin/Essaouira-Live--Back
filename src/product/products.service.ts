@@ -14,11 +14,11 @@ export class ProductsService {
     return product.save();
   }
   async findAllPublic(){
-    return this.productModel.find().exec();
+    return this.productModel.find({display: true}).exec();
   }
 
   async findAll(userId: string): Promise<Product[]> {
-    return this.productModel.find({userId, display: true}).exec();
+    return this.productModel.find({userId}).exec();
   }
 
   async findOne(id: string): Promise<Product> {
