@@ -21,9 +21,11 @@ export class Product {
   @Prop()
   imageUrl: string;
 
-  @Prop({ enum: ['active', 'out of stock'], default: 'active' })
+  @Prop({ enum: ['in stock', 'out of stock'], default: 'in stock' })
   status: string;
 
+  @Prop({ default: true })
+  display: boolean;
 
   @Prop({ type: String, ref: 'User', required: true }) 
   userId: string;

@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 export class CreateProductDto {
@@ -18,11 +18,12 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @Type(() => Number) // Transform string to number
+  @Type(() => Number)
   @Transform(({ value }) => parseInt(value))
   quantity: number;
 
   @IsString()
   @IsOptional()
   imageUrl?: string;
+
 }
