@@ -15,8 +15,8 @@ export class ProductsService {
   }
   async findAllPublic(){
     return this.productModel.find({display: true}).exec();
-  }
-
+  } 
+ 
   async findAll(userId: string): Promise<Product[]> {
     return this.productModel.find({userId}).exec();
   }

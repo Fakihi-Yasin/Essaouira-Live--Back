@@ -17,7 +17,11 @@ export class Product {
 
   @Prop({ required: true })
   quantity: number;
-  
+
+  @Prop({ required: true })
+  category: string;
+
+
   @Prop()
   imageUrl: string;
 
@@ -32,6 +36,7 @@ export class Product {
 
   @Prop({ default: true })
   display: boolean;
+
 
   @Prop({ type: String, ref: 'User', required: true }) 
   userId: string;

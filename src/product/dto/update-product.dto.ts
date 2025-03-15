@@ -17,6 +17,10 @@ export class UpdateProductDto {
   @IsNumber({}, { message: 'Quantity must be a number' })
   quantity?: number;
 
+  @IsOptional()
+  @IsString()
+  category?: string;
+
 
   @IsOptional()
   @IsString()
