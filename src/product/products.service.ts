@@ -1,12 +1,13 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId } from 'mongoose';
-import { Product, ProductDocument } from '../schemas/product.schema';
+import { Model, Types, isValidObjectId } from 'mongoose';
+import { Product, ProductDocument } from './schema/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
+  private readonly logger = new Logger(ProductsService.name);
   constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) {}
 
   async create(createProductDto: CreateProductDto, userId: string): Promise<Product> {
@@ -31,6 +32,14 @@ export class ProductsService {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
     return product;
+  }
+  async findByCategory(categoryId: string) {
+    this.logger.log(`Service: Finding products by category ${categoryId}`);
+    
+    // Try querying with the string directly since that's how it's stored
+    return this.productModel.find({ category: categoryId })
+      .populate('category')
+      .exec();
   }
 
   async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {

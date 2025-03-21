@@ -66,6 +66,13 @@ export class ProductsController {
     return of(res.sendFile(join(process.cwd(), 'uploads', imageName)));
   }
 
+  @Get('category/:categoryId')
+async findByCategory(@Param('categoryId') categoryId: string) {
+  this.logger.log(`Fetching products for category: ${categoryId}`);
+  return this.productsService.findByCategory(categoryId);
+}
+
+
   @Put(':id')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async update(

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
-import { User, UserDocument } from '../schemas/user.schema';
+import { User, UserDocument } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
