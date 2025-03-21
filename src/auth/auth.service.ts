@@ -14,17 +14,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // **Register User**
+
   async register(registerDto: RegisterDto) {
     const { name,lastname, email, password } = registerDto;
 
-    // Check if email already exists
+
     const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
 
-    // Hash password before saving
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new this.userModel({ name,lastname, email, password: hashedPassword });
     await user.save();
@@ -35,13 +35,12 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-    // Check if user exists
+
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');

@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 interface AuthRequest extends Request {
-  user?: any; // Extend Request to include user
+  user?: any; 
 }
 
 @Injectable()
@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const decoded = this.jwtService.verify(token);
-      request.user = decoded; // Now TypeScript won't complain
+      request.user = decoded; 
       return true;
     } catch (error) {
       throw new UnauthorizedException('Invalid token');
