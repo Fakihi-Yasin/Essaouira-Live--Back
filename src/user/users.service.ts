@@ -5,6 +5,7 @@ import { User, UserDocument } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
+import { promises } from 'dns';
 
 @Injectable()
 export class UserService {
@@ -34,6 +35,17 @@ export class UserService {
     }
   }
 
+  async requestSeller(userId: string): Promise<User> {
+    const user = await this.userModel.findById(userId);
+    if(!user){
+      throw new NotFoundException('user not found');
+    }
+  user.sellerRequest = 'pending';
+  await user.save();
+  return user;
+  }
+
+ 
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }

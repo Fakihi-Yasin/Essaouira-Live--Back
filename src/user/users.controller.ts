@@ -9,9 +9,11 @@ import {
   Body, 
   Param,
   HttpCode,
-  HttpStatus
+  HttpStatus,
+  Patch
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -24,6 +26,13 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('/api/request-seller')
+  @UseGuards(AuthGuard, RolesGuard)
+  async requestseller(@Req() req){
+    const userId = req.user.userId;
+    return this.userService.requestSeller(userId)
   }
 
   @Get()
