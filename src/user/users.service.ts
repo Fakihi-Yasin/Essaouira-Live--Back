@@ -59,7 +59,17 @@ export class UserService {
     return user;
   }
 
-  
+  async rejectseller(userId: string): Promise<User>{
+    {
+      const user =  await this.userModel.findById(userId);
+      if(!user){
+        throw new NotFoundException('user not found');
+      }
+      user.sellerRequest ='rejected';
+      user.save();
+      return user;
+    }
+  }
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }

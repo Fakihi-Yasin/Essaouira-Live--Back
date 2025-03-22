@@ -39,6 +39,11 @@ export class UserController {
   async approveseller(@Param('id') id: string){
     return  this.userService.approveseller(id)
   }
+  @Patch('/api/reject-seller/:id')
+  @UseGuards(AuthGuard)
+  async rejectseller(@Param('id') id: string){
+    return this.userService.rejectseller(id)
+  }
 
   @Get()
   @UseGuards(AuthGuard)
