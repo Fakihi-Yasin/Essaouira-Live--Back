@@ -34,6 +34,11 @@ export class UserController {
     const userId = req.user.userId;
     return this.userService.requestSeller(userId)
   }
+  @Patch('/api/accept-seller/:id')
+  @UseGuards(AuthGuard)
+  async approveseller(@Param('id') id: string){
+    return  this.userService.approveseller(id)
+  }
 
   @Get()
   @UseGuards(AuthGuard)
