@@ -60,7 +60,6 @@ export class ProductsController {
     return this.productsService.findAll(userId);
   }
 
-  // Serve product images
   @Get('image/:imageName')
   getProductImage(@Param('imageName') imageName: string, @Res() res) {
     return of(res.sendFile(join(process.cwd(), 'uploads', imageName)));

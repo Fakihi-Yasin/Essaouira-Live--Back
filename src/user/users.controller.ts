@@ -10,7 +10,8 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-  Patch
+  Patch,
+  SetMetadata
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -18,8 +19,11 @@ import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('users')
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 
+@Controller('users')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('admin')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -30,49 +34,43 @@ export class UserController {
   }
 
   @Post('/api/request-seller')
-  @UseGuards(AuthGuard, RolesGuard)
-  async requestseller(@Req() req){
+  async requestSeller(@Req() req) {
     const userId = req.user.userId;
-    return this.userService.requestSeller(userId)
+    return this.userService.requestSeller(userId);
   }
+
   @Patch('/api/accept-seller/:id')
-  @UseGuards(AuthGuard)
-  async approveseller(@Param('id') id: string){
-    return  this.userService.approveseller(id)
+  async approveSeller(@Param('id') id: string) {
+    return this.userService.approveseller(id);
   }
+
   @Patch('/api/reject-seller/:id')
-  @UseGuards(AuthGuard)
-  async rejectseller(@Param('id') id: string){
-    return this.userService.rejectseller(id)
+  async rejectSeller(@Param('id') id: string) {
+    return this.userService.rejectseller(id);
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   async findAll() {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
   async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') id: string) {
     return this.userService.delete(id);
   }
 
   @Get('profile')
-  @UseGuards(AuthGuard)
   getProfile(@Req() request) {
     return { message: 'User profile', user: request.user };
   }
