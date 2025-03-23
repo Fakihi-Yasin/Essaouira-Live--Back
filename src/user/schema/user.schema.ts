@@ -17,6 +17,9 @@ export class User extends Document {
   @Prop({ enum: ['user', 'seller', 'admin'], default: 'user' })
   role: string;
 
+  @Prop({ enum:['none','pending','approved','rejected'], default: 'none' })
+  sellerRequest: string;
+
   @Prop({ enum: ['active', 'inactive', 'suspended'], default: 'active' })
   status: string;
 

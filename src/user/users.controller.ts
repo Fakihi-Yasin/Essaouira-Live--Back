@@ -9,14 +9,17 @@ import {
   Body, 
   Param,
   HttpCode,
-  HttpStatus
+  HttpStatus,
+  Patch
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
+
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -24,6 +27,23 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('/api/request-seller')
+  @UseGuards(AuthGuard, RolesGuard)
+  async requestseller(@Req() req){
+    const userId = req.user.userId;
+    return this.userService.requestSeller(userId)
+  }
+  @Patch('/api/accept-seller/:id')
+  @UseGuards(AuthGuard)
+  async approveseller(@Param('id') id: string){
+    return  this.userService.approveseller(id)
+  }
+  @Patch('/api/reject-seller/:id')
+  @UseGuards(AuthGuard)
+  async rejectseller(@Param('id') id: string){
+    return this.userService.rejectseller(id)
   }
 
   @Get()
