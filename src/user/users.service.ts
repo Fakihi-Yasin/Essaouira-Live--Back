@@ -45,17 +45,28 @@ export class UserService {
   return user;
   }
 
+  // async approveseller(userId: string): Promise<User>{
+  //   const user = await this.userModel.findById(userId);
+  //   if(!user){
+  //     throw new NotFoundException('user not found');
+  //   }
+
+  //   user.role = 'seller';
+  //   user.sellerRequest = 'approved';
+  //   await user.save();
+
+  //   // await this.mailservice.sendSellerApprovedEmail(user.email, user,name);
+  //   return user;
+  // }
+
   async approveseller(userId: string): Promise<User>{
     const user = await this.userModel.findById(userId);
     if(!user){
       throw new NotFoundException('user not found');
     }
-
     user.role = 'seller';
-    user.sellerRequest = 'pending';
+    user.sellerRequest = 'approved'; 
     await user.save();
-
-    // await this.mailservice.sendSellerApprovedEmail(user.email, user,name);
     return user;
   }
 
