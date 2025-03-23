@@ -10,7 +10,8 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-  Patch
+  Patch,
+  SetMetadata
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -18,9 +19,11 @@ import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+
 @Controller('users')
 @UseGuards(AuthGuard, RolesGuard)
-@Roles('admin') 
+@Roles('admin')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -31,18 +34,18 @@ export class UserController {
   }
 
   @Post('/api/request-seller')
-  async requestseller(@Req() req) {
+  async requestSeller(@Req() req) {
     const userId = req.user.userId;
     return this.userService.requestSeller(userId);
   }
 
   @Patch('/api/accept-seller/:id')
-  async approveseller(@Param('id') id: string) {
+  async approveSeller(@Param('id') id: string) {
     return this.userService.approveseller(id);
   }
 
   @Patch('/api/reject-seller/:id')
-  async rejectseller(@Param('id') id: string) {
+  async rejectSeller(@Param('id') id: string) {
     return this.userService.rejectseller(id);
   }
 
@@ -72,7 +75,3 @@ export class UserController {
     return { message: 'User profile', user: request.user };
   }
 }
-function Roles(arg0: string): (target: typeof UserController) => void | typeof UserController {
-  throw new Error('Function not implemented.');
-}
-
