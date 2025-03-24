@@ -103,7 +103,6 @@ export class UserService {
     }
 
     try {
-      // Check if email is being updated and already exists
       if (updateUserDto.email) {
         const existingUser = await this.userModel.findOne({ 
           email: updateUserDto.email,
@@ -114,7 +113,6 @@ export class UserService {
         }
       }
 
-      // Hash password if it's being updated
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
       }
