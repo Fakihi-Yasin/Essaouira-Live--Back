@@ -6,7 +6,7 @@ interface AuthRequest extends Request {
   user?: any; 
 }
 
-@Injectable() 
+@Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}
 
