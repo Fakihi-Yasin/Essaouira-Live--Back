@@ -35,7 +35,6 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
 
-
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -48,9 +47,8 @@ export class AuthService {
 
     const payload = { userId: user._id, email: user.email };
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, { expiresIn:'1h'}),
       role: user.role,
-
     };
   }
   
