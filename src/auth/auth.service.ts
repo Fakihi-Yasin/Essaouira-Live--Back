@@ -8,8 +8,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { User, UserDocument } from '../user/schema/user.schema';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { ForgotPasswordDto } from './dto/forgot.password.dto';
-import { ResetPasswordDto } from './dto/resetpassword.dto';
 import { EmailService } from '../email/email.service';
 import { UserService } from '../user/users.service';
 
